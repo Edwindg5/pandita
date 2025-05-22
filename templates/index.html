@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nuestro Diario de Amor ❤️</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <div class="floating-hearts" id="hearts-container"></div>
+    
+    <div class="container">
+        <h1>Nuestro Diario de Amor <span class="heart">❤️</span></h1>
+        <p class="subtitle">Cada momento contigo es un recuerdo que atesoro...</p>
+        
+        <div class="form-container">
+            <h2 class="form-title">Añadir nueva entrada</h2>
+            <form method="POST" action="/add">
+                <div class="form-group">
+                    <label for="title">Título:</label>
+                    <input type="text" id="title" name="title" required placeholder="¿De qué quieres hablar hoy?">
+                </div>
+                <div class="form-group">
+                    <label for="content">Mensaje:</label>
+                    <textarea id="content" name="content" required placeholder="Escribe aquí tus pensamientos, recuerdos o mensajes de amor..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="reminder">Fecha recordatorio (opcional):</label>
+                    <input type="date" id="reminder" name="reminder">
+                </div>
+                <button type="submit" class="btn btn-block">Guardar en nuestro diario ❤️</button>
+            </form>
+        </div>
+        
+        <div class="notes-container">
+            <h2 class="section-title">Tus entradas recientes</h2>
+            {% for note in notes %}
+            <div class="note">
+                <div class="note-content">
+                    <h3 class="note-title">{{ note.title }}</h3>
+                    <p class="note-text">{{ note.content }}</p>
+                    <p class="note-date">Escrito el {{ note.created_at }}</p>
+                    {% if note.reminder %}
+                    <span class="note-reminder">📅 Recordatorio: {{ note.reminder }}</span>
+                    {% endif %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    
+    <a href="#top" class="floating-btn">↑</a>
+    
+    <script src="/static/script.js"></script>
+</body>
+</html>
