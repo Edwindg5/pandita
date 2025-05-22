@@ -3,53 +3,161 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nuestro Diario de Amor ❤️</title>
+    <title>Nuestro Mundo de Amor ❤️</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="/static/style.css">
 </head>
 <body>
     <div class="floating-hearts" id="hearts-container"></div>
+    <div class="floating-photos" id="photos-container"></div>
     
-    <div class="container">
-        <h1>Nuestro Diario de Amor <span class="heart">❤️</span></h1>
-        <p class="subtitle">Cada momento contigo es un recuerdo que atesoro...</p>
-        
-        <div class="form-container">
-            <h2 class="form-title">Añadir nueva entrada</h2>
-            <form method="POST" action="/add">
-                <div class="form-group">
-                    <label for="title">Título:</label>
-                    <input type="text" id="title" name="title" required placeholder="¿De qué quieres hablar hoy?">
-                </div>
-                <div class="form-group">
-                    <label for="content">Mensaje:</label>
-                    <textarea id="content" name="content" required placeholder="Escribe aquí tus pensamientos, recuerdos o mensajes de amor..."></textarea>
-                </div>
-                <div class="form-group">
-                    <label for="reminder">Fecha recordatorio (opcional):</label>
-                    <input type="date" id="reminder" name="reminder">
-                </div>
-                <button type="submit" class="btn btn-block">Guardar en nuestro diario ❤️</button>
-            </form>
-        </div>
-        
-        <div class="notes-container">
-            <h2 class="section-title">Tus entradas recientes</h2>
-            {% for note in notes %}
-            <div class="note">
-                <div class="note-content">
-                    <h3 class="note-title">{{ note.title }}</h3>
-                    <p class="note-text">{{ note.content }}</p>
-                    <p class="note-date">Escrito el {{ note.created_at }}</p>
-                    {% if note.reminder %}
-                    <span class="note-reminder">📅 Recordatorio: {{ note.reminder }}</span>
-                    {% endif %}
-                </div>
+    <div class="love-container">
+        <header class="love-header">
+            <h1>Nuestro Mundo de Amor <span class="heart-beat">❤️</span></h1>
+            <p class="subtitle">Cada latido, cada risa, cada mirada... todo lo guardo aquí</p>
+        </header>
+
+        <nav class="love-nav">
+            <button class="nav-btn active" data-target="diario">Diario</button>
+            <button class="nav-btn" data-target="eventos">Eventos</button>
+            <button class="nav-btn" data-target="notas">Notas</button>
+        </nav>
+
+        <!-- Sección Diario -->
+        <section id="diario" class="content-section active">
+            <div class="form-container">
+                <h2 class="form-title"><i class="fas fa-book-open"></i> Nueva entrada en nuestro diario</h2>
+                <form method="POST" action="/add" class="love-form">
+                    <div class="form-group">
+                        <label for="title"><i class="fas fa-heading"></i> Título:</label>
+                        <input type="text" id="title" name="title" required placeholder="¿Qué momento especial quieres recordar hoy?">
+                    </div>
+                    <div class="form-group">
+                        <label for="content"><i class="fas fa-comment-dots"></i> Mensaje:</label>
+                        <textarea id="content" name="content" required placeholder="Describe este momento con todo tu amor..."></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-love">
+                        <i class="fas fa-heart"></i> Guardar en nuestro corazón
+                    </button>
+                </form>
             </div>
-            {% endfor %}
-        </div>
+            
+            <div class="entries-container">
+                <h2 class="section-title"><i class="fas fa-history"></i> Nuestros recuerdos</h2>
+                {% for note in notes if not note.get('is_event') and not note.get('is_task') %}
+                <div class="love-entry animate-pop">
+                    <div class="entry-content">
+                        <h3 class="entry-title">{{ note.title }} <span class="entry-date">{{ note.created_at }}</span></h3>
+                        <p class="entry-text">{{ note.content }}</p>
+                        {% if note.reminder %}
+                        <div class="reminder-bubble">
+                            <i class="fas fa-bell"></i> Recordatorio: {{ note.reminder }}
+                        </div>
+                        {% endif %}
+                    </div>
+                    <div class="entry-actions">
+                        <button class="btn-icon love-btn"><i class="fas fa-heart"></i></button>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </section>
+
+        <!-- Sección Eventos -->
+        <section id="eventos" class="content-section">
+            <div class="form-container">
+                <h2 class="form-title"><i class="fas fa-calendar-check"></i> Agregar un evento especial</h2>
+                <form method="POST" action="/add-event" class="love-form">
+                    <div class="form-group">
+                        <label for="event-title"><i class="fas fa-heading"></i> Evento:</label>
+                        <input type="text" id="event-title" name="title" required placeholder="¿Qué vamos a celebrar?">
+                    </div>
+                    <div class="form-group">
+                        <label for="event-desc"><i class="fas fa-comment-dots"></i> Descripción:</label>
+                        <textarea id="event-desc" name="content" required placeholder="Detalles del evento..."></textarea>
+                    </div>
+                    <div class="form-group-row">
+                        <div class="form-group half">
+                            <label for="event-date"><i class="fas fa-calendar-day"></i> Fecha:</label>
+                            <input type="date" id="event-date" name="date" required>
+                        </div>
+                        <div class="form-group half">
+                            <label for="event-time"><i class="fas fa-clock"></i> Hora:</label>
+                            <input type="time" id="event-time" name="time" required>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-love">
+                        <i class="fas fa-calendar-plus"></i> Guardar evento
+                    </button>
+                </form>
+            </div>
+            
+            <div class="events-container">
+                <h2 class="section-title"><i class="fas fa-calendar-alt"></i> Próximos eventos</h2>
+                {% for note in notes if note.get('is_event') %}
+                <div class="love-event animate-pop">
+                    <div class="event-date">
+                        <div class="event-day">{{ note.event_date.split('-')[2] }}</div>
+                        <div class="event-month">{{ get_month_name(note.event_date.split('-')[1]) }}</div>
+                    </div>
+                    <div class="event-content">
+                        <h3 class="event-title">{{ note.title }}</h3>
+                        <p class="event-text">{{ note.content }}</p>
+                        <div class="event-time"><i class="fas fa-clock"></i> {{ note.event_time }}</div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </section>
+
+        <!-- Sección Notas -->
+        <section id="notas" class="content-section">
+            <div class="form-container">
+                <h2 class="form-title"><i class="fas fa-sticky-note"></i> Nueva nota importante</h2>
+                <form method="POST" action="/add-task" class="love-form">
+                    <div class="form-group">
+                        <label for="task-title"><i class="fas fa-heading"></i> Título:</label>
+                        <input type="text" id="task-title" name="title" required placeholder="¿Qué necesitamos recordar?">
+                    </div>
+                    <div class="form-group">
+                        <label for="task-desc"><i class="fas fa-comment-dots"></i> Descripción:</label>
+                        <textarea id="task-desc" name="content" required placeholder="Detalles importantes..."></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="task-due"><i class="fas fa-hourglass-end"></i> Fecha límite:</label>
+                        <input type="date" id="task-due" name="due_date" required>
+                    </div>
+                    <button type="submit" class="btn btn-love">
+                        <i class="fas fa-plus-circle"></i> Agregar nota
+                    </button>
+                </form>
+            </div>
+            
+            <div class="tasks-container">
+                <h2 class="section-title"><i class="fas fa-tasks"></i> Nuestras notas</h2>
+                {% for note in notes if note.get('is_task') %}
+                <div class="love-task animate-pop">
+                    <div class="task-checkbox">
+                        <input type="checkbox" id="task-{{ note.id }}" {% if note.completed %}checked{% endif %}>
+                        <label for="task-{{ note.id }}"></label>
+                    </div>
+                    <div class="task-content">
+                        <h3 class="task-title {% if note.completed %}completed{% endif %}">{{ note.title }}</h3>
+                        <p class="task-text">{{ note.content }}</p>
+                        <div class="task-due {% if note.is_overdue %}overdue{% endif %}">
+                            <i class="fas fa-calendar"></i> {{ note.due_date }}
+                            {% if note.is_overdue %}<span class="urgent">¡Urgente!</span>{% endif %}
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </section>
     </div>
     
-    <a href="#top" class="floating-btn">↑</a>
+    <div class="love-footer">
+        <p>Creado con <i class="fas fa-heart heartbeat"></i> para la persona más especial</p>
+    </div>
     
     <script src="/static/script.js"></script>
 </body>
