@@ -4,9 +4,11 @@ import json
 import os
 import secrets
 
-app = Flask(__name__, static_folder='static')
-app.secret_key = secrets.token_hex(16)
-DB_FILE = 'diario.json'
+app = Flask(__name__, static_folder='static', template_folder='templates')
+app.secret_key = os.environ.get('SECRET_KEY', secrets.token_hex(16))
+
+# Usar /tmp para almacenamiento temporal en Vercel
+DB_FILE = '/tmp/diario.json' if os.environ.get('VERCEL') else 'diario.json'
 
 # Inicializar base de datos JSON
 def init_db():

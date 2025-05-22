@@ -24,7 +24,7 @@ document.addEventListener('click', function(e) {
     const clickHeart = document.createElement('div');
     clickHeart.className = 'heart-msg';
     clickHeart.innerHTML = '❤️';
-    clickHeart.style.left = e.clientX + 'px';
+    clickHeart.style.left = e.clientX + 'px';   
     clickHeart.style.top = e.clientY + 'px';
     clickHeart.style.fontSize = '30px';
     clickHeart.style.animationDuration = '2s';
